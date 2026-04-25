@@ -1,0 +1,22 @@
+---
+interface Props {
+  href?: string;
+  label: string;
+  type?: "github" | "demo" | "screenshot" | "tweet" | "link";
+}
+
+const { href = "#", label, type = "link" } = Astro.props;
+
+const icons: Record<string, string> = {
+  github: "GH",
+  demo: "DEMO",
+  screenshot: "IMG",
+  tweet: "X",
+  link: "LINK",
+};
+---
+
+<a href={href} target="_blank" rel="noopener noreferrer" class="artifact">
+  <span class="artifact-type">{icons[type]}</span>
+  <span>{label}</span>
+</a>

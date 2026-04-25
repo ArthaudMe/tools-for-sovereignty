@@ -1,0 +1,14 @@
+---
+interface Props {
+  type?: "pivot" | "insight";
+}
+
+const { type = "insight" } = Astro.props;
+const className = type === "pivot" ? "lesson pivot" : "lesson";
+const label = type === "pivot" ? "Why we moved on" : "Why it was interesting";
+---
+
+<aside class={className}>
+  <span class="lesson-label">{label}</span>
+  <slot />
+</aside>

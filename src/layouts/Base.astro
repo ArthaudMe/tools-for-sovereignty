@@ -1,0 +1,222 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "The first year of Tools for Sovereignty. Navigating the idea maze." } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body class="grain">
+    <canvas class="stipple-canvas" id="stipple"></canvas>
+
+    <nav class="nav">
+      <div class="nav-inner">
+        <a href="/" class="nav-logo">TFS</a>
+        <div class="nav-links">
+          <a href="/">The Maze</a>
+          <a href="/manifesto">Manifesto</a>
+        </div>
+      </div>
+    </nav>
+
+    <main style="padding-top: 5rem;">
+      <slot />
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <p>Tools for Sovereignty, 2025-2026</p>
+      </div>
+    </footer>
+
+    <script>
+      // --- Chapter fade-in observer ---
+      const chapterObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+      );
+      document.querySelectorAll(".chapter").forEach((el) => chapterObserver.observe(el));
+
+      // --- Stipple timeline: dots scatter → converge into the maze line as you scroll ---
+      const canvas = document.getElementById("stipple") as HTMLCanvasElement;
+      if (!canvas) throw new Error("No canvas");
+      const ctx = canvas.getContext("2d")!;
+
+      let W = 0;
+      let H = 0;
+      let dpr = 1;
+
+      interface Dot {
+        // Rest position on the line (page coords)
+        lineX: number;
+        lineY: number;
+        // Scatter offset from the line
+        offsetX: number;
+        offsetY: number;
+        size: number;
+        baseOpacity: number;
+      }
+
+      let dots: Dot[] = [];
+      let mazeTop = 0;
+      let mazeBottom = 0;
+      let mazeLineX = 0;
+      let isMobile = false;
+
+      const DOT_SPACING = 3;
+      const SCATTER_X = 180;
+      const SCATTER_Y = 40;
+
+      function resize() {
+        dpr = window.devicePixelRatio || 1;
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        canvas.style.width = W + "px";
+        canvas.style.height = H + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        isMobile = W < 768;
+      }
+
+      function seedDots() {
+        dots = [];
+        const maze = document.getElementById("maze");
+        if (!maze || isMobile) return;
+
+        const rect = maze.getBoundingClientRect();
+        mazeTop = rect.top + window.scrollY;
+        mazeBottom = rect.bottom + window.scrollY;
+
+        // The line X is at the left padding of .maze (container padding 2rem + maze-line at 1.25rem)
+        const containerLeft = rect.left;
+        mazeLineX = containerLeft + 20; // ~1.25rem
+
+        const totalHeight = mazeBottom - mazeTop;
+        const count = Math.floor(totalHeight / DOT_SPACING);
+
+        for (let i = 0; i < count; i++) {
+          const lineY = mazeTop + i * DOT_SPACING;
+
+          // Random scatter direction - mostly horizontal spread with some vertical jitter
+          const angle = Math.random() * Math.PI * 2;
+          const distX = (Math.random() * 0.7 + 0.3) * SCATTER_X * (Math.random() < 0.5 ? -1 : 1);
+          const distY = (Math.random() - 0.5) * SCATTER_Y * 2;
+
+          dots.push({
+            lineX: mazeLineX,
+            lineY,
+            offsetX: distX + Math.cos(angle) * 20,
+            offsetY: distY + Math.sin(angle) * 15,
+            size: Math.random() * 1.4 + 0.5,
+            baseOpacity: Math.random() * 0.25 + 0.15,
+          });
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        if (isMobile || dots.length === 0) return;
+
+        const scrollTop = window.scrollY;
+        const viewTop = scrollTop - 100;
+        const viewBottom = scrollTop + H + 100;
+
+        // The "convergence front" is at the top third of the viewport
+        // Dots above this line are converged, dots below scatter
+        const convergeFront = scrollTop + H * 0.35;
+        // Transition zone: dots within this range are partially converged
+        const transitionRange = H * 0.6;
+
+        for (const dot of dots) {
+          // Skip dots far off screen
+          if (dot.lineY < viewTop - SCATTER_Y || dot.lineY > viewBottom + SCATTER_Y) continue;
+
+          // How far below the convergence front is this dot?
+          const distBelowFront = dot.lineY - convergeFront;
+
+          // progress: 1 = fully on the line, 0 = fully scattered
+          let progress: number;
+          if (distBelowFront <= 0) {
+            // Above the front: fully converged
+            progress = 1;
+          } else if (distBelowFront >= transitionRange) {
+            // Far below: fully scattered
+            progress = 0;
+          } else {
+            // In transition zone
+            const t = 1 - distBelowFront / transitionRange;
+            progress = t * t * t; // ease-in cubic for organic feel
+          }
+
+          // Position: interpolate between scattered and line
+          const x = dot.lineX + dot.offsetX * (1 - progress);
+          const y = dot.lineY + dot.offsetY * (1 - progress);
+
+          // Convert to screen coords
+          const screenY = y - scrollTop;
+
+          // Opacity: converged dots are more opaque and form a solid line
+          const opacity = dot.baseOpacity * (0.2 + progress * 0.8);
+
+          ctx.fillStyle = `rgba(58, 52, 46, ${opacity})`;
+          ctx.beginPath();
+          // Dots get slightly smaller as they converge (tighter line)
+          const size = dot.size * (1 - progress * 0.4);
+          ctx.arc(x, screenY, size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      let ticking = false;
+      function onScroll() {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            draw();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+
+      function init() {
+        resize();
+        seedDots();
+        draw();
+      }
+
+      window.addEventListener("resize", () => {
+        resize();
+        seedDots();
+        draw();
+      });
+      window.addEventListener("scroll", onScroll, { passive: true });
+
+      if (document.readyState === "complete") {
+        init();
+      } else {
+        window.addEventListener("load", init);
+      }
+    </script>
+  </body>
+</html>

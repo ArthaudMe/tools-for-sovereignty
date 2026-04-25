@@ -1,0 +1,20 @@
+---
+interface Props {
+  date: string;
+  title: string;
+  status?: "dead-end" | "active-path" | "default";
+}
+
+const { date, title, status = "default" } = Astro.props;
+const nodeClass = status === "dead-end" ? "dead-end" : status === "active-path" ? "active-path" : "";
+---
+
+<section class="chapter">
+  <div class={`chapter-node ${nodeClass}`}>
+    <span class="chapter-date">{date}</span>
+    <h2 class="chapter-title">{title}</h2>
+    <div class="chapter-body">
+      <slot />
+    </div>
+  </div>
+</section>
