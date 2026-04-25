@@ -8,227 +8,170 @@ import Artifact from "../components/Artifact.astro";
 <Base title="Navigating the Idea Maze | Tools for Sovereignty">
   <!-- Hero -->
   <header class="container hero">
-    <p class="hero-overline">Year One / April 2025 - April 2026</p>
     <h1 class="hero-title">
       Navigating the<br />Idea Maze
     </h1>
     <div class="hero-intro">
       <p>
-        We've spent the last year navigating the
+        We spent the last year navigating the
         <a class="inline-link" href="https://cdixon.org/2013/08/04/the-idea-maze" target="_blank" rel="noopener noreferrer">idea maze</a>.
-        We built things that worked and things that didn't.
-        We learned a lot.
+        We've worked through eight different product iterations and learned so
+        much. Today marks the one-year anniversary of the incorporation of
+        Tools for Sovereignty. This is an account of what we worked on, what we
+        found interesting, and what we learned.
+        <a class="inline-link" href="https://posthog.com/founders/product-market-fit-game" target="_blank" rel="noopener noreferrer">PostHog</a> and
+        <a class="inline-link" href="https://www.lennysnewsletter.com/p/finding-product-market-fit" target="_blank" rel="noopener noreferrer">Lenny's newsletter</a>,
+        which also influenced our navigation of this phase, are valuable
+        resources for any early-stage founder pre-PMF.
       </p>
-      <p>
-        This is an account of what we worked on, why we found it interesting,
-        and what we learned from it.
-      </p>
-    </div>
-
-    <div class="hero-readings">
-      <p class="hero-readings-label">Frameworks</p>
-      <ul class="hero-readings-list">
-        <li>
-          <a href="https://cdixon.org/2013/08/04/the-idea-maze" target="_blank" rel="noopener noreferrer">The Idea Maze</a>
-          <span class="reading-attr"> / Chris Dixon</span>
-        </li>
-        <li>
-          <a href="https://www.lennysnewsletter.com/p/finding-product-market-fit" target="_blank" rel="noopener noreferrer">Finding Product-Market Fit</a>
-          <span class="reading-attr"> / Lenny Rachitsky</span>
-        </li>
-        <li>
-          <a href="https://posthog.com/founders/product-market-fit-game" target="_blank" rel="noopener noreferrer">The Product-Market Fit Game</a>
-          <span class="reading-attr"> / PostHog</span>
-        </li>
-      </ul>
     </div>
   </header>
 
   <!-- The Maze -->
   <div class="container maze" id="maze">
 
-    <!-- PRE-INCORPORATION -->
-    <div style="margin-bottom: 4rem;">
-      <p class="maze-era">Before incorporation</p>
-    </div>
-
-    <Chapter date="October 2024" title="The Startup Company" status="dead-end">
+    <Chapter date="October - December 2024" title="The Startup Company" status="dead-end">
       <p>
-        Let anyone incorporate a company on the internet, on-chain.
-        We called it TSC, The Startup Company. We found Sark, a tiny crown
-        dependency near Jersey and Guernsey that didn't have company law,
-        and explored writing company law with them. We looked at Argentina.
-        We looked at EU Inc. We imagined a batchless Y Combinator, a neobank
-        built on zero-knowledge proofs.
+        Product: Incorporation + Neobank using ZKPs (Aztec) — think
+        <a class="inline-link" href="https://x.com/arthaud_/status/1900578061873041558" target="_blank" rel="noopener noreferrer">Stripe Atlas + Mercury</a>.
       </p>
-      <Lesson type="insight">
-        On-chain company formation was a genuinely unsolved problem. The
-        regulatory surface area was fascinating, and ZK-proofs for financial
-        identity felt like the future.
-      </Lesson>
+      <p>
+        Problem: Admin is one of the blockers preventing entrepreneurship outside the US.
+      </p>
+      <p>
+        Solution: Simplest way to incorporate & run an
+        <a class="inline-link" href="https://paragraph.com/@internetnativecompany" target="_blank" rel="noopener noreferrer">internet native company</a>.
+      </p>
+      <p>
+        GTM: Partner with Sark, a UK crown dependency, to create a hub for internet founders.
+      </p>
       <Lesson type="pivot">
-        Jurisdictional innovation moves at government speed. We were building
-        software on a regulatory timeline.
+        Too slow + our PE partner in Sark didn't follow through.
       </Lesson>
     </Chapter>
 
-    <Chapter date="November 2024" title="What Did You Get Done This Week?" status="dead-end">
+    <Chapter date="November 2024" title="What Did You Get Done Today?" status="dead-end">
       <p>
-        A Slack bot that asked your team one question every week: "What did
-        you get done?" Simple accountability, async standups, a lightweight
-        way to keep distributed teams in sync.
+        Product: A Slack bot automating standup.
       </p>
-      <Lesson type="insight">
-        Teams wanted visibility into what everyone was working on, but they
-        didn't want another tool to manage. The friction was the format, not
-        the intent.
-      </Lesson>
+      <p>
+        Problem: Companies waste a lot of time on coordination whilst all the work artifacts already exist.
+      </p>
+      <p>
+        Description: A Slack bot using LLMs to aggregate the work done across different tools.
+      </p>
+      <p>
+        GTM: Founder sales.
+      </p>
       <Lesson type="pivot">
-        A Slack bot is a feature, not a company. But it planted a seed: the
-        interesting problem was what happens to all that context after you
-        collect it.
+        Feature not a product: LLMs not powerful enough then and MCP extremely nascent.
+      </Lesson>
+      <figure class="chapter-figure">
+        <img src="/slack-bot-screenshot.jpg" alt="An example of the message published by the Slack bot" class="chapter-image" />
+        <figcaption>An example of the message published by the Slack bot</figcaption>
+      </figure>
+    </Chapter>
+
+    <Chapter date="December 2024" title="Personal Data Marketplace" status="dead-end">
+      <p>
+        Product: Marketplace for internet users to sell their data to train models.
+      </p>
+      <p>
+        Problem: Get model providers to pay internet users for their data & get people to care about data ownership.
+      </p>
+      <p>
+        GTM: Bootstrap demand with crypto economics.
+      </p>
+      <Lesson type="pivot">
+        Model providers don't care about non-expert data.
       </Lesson>
     </Chapter>
 
-    <Chapter date="November - December 2024" title="Selling Your Own Data" status="dead-end">
+    <Chapter date="January - April 2025" title="The Worldcoin Bet" status="dead-end">
       <p>
-        What if people could sell their personal data to model companies? A
-        marketplace for user data, powered by crypto. The user owns it, the
-        user sells it, the buyer gets training data they can trust.
+        Product: Mini-apps on World App.
       </p>
-      <Lesson type="insight">
-        The idea of user-owned data was compelling. Crypto economics offered
-        a credible mechanism for provenance and payment. The demand side
-        (model companies needing diverse, high-quality training data) felt real.
-      </Lesson>
+      <p>
+        Opportunity: World App was emerging as a novel superapp.
+      </p>
+      <p>
+        GTM: Build the best AI apps on World using personalisation —
+        <a class="inline-link" href="https://x.com/arthaud_/status/1883950196159353191" target="_blank" rel="noopener noreferrer">got to 250k users</a> in the span of a few months.
+      </p>
       <Lesson type="pivot">
-        The economics didn't work. Individual data isn't valuable enough to
-        create a functioning marketplace, and the infrastructure needed to
-        make it trustworthy was enormous.
+        World App users were speculators, not looking for utility-based products.
       </Lesson>
+      <figure class="chapter-figure">
+        <img src="/worldcoin-screenshot.jpg" alt="Sage — #1 AI app on World" class="chapter-image" />
+      </figure>
     </Chapter>
 
-    <Chapter date="January - April 2025" title="The Worldcoin Bet">
+    <Chapter date="May - September 2025" title="Private Memory Infrastructure" status="dead-end">
       <p>
-        We went all in on building AI mini-apps inside the World (formerly
-        Worldcoin) ecosystem. First came Sage, an AI assistant that became the
-        biggest AI app on World, reaching 250,000 users. Then Bestie, a
-        companion app.
+        Product: Private memory infrastructure sold to AI apps.
       </p>
       <p>
-        We had distribution. We had users. We were learning what people
-        actually wanted from AI that knew them.
-      </p>
-      <Lesson type="insight">
-        Distribution without ownership is renting. We had 250K users on
-        someone else's platform. But we learned something critical: people
-        want AI that remembers them.
-      </Lesson>
-      <div style="margin-top: 1rem;">
-        <Artifact label="Sage" type="link" />
-        <Artifact label="Bestie" type="link" />
-      </div>
-    </Chapter>
-
-    <!-- INCORPORATION -->
-    <div class="incorporation">
-      <div class="incorporation-inner">
-        <p class="incorporation-label">April 2025 / Incorporation</p>
-        <p class="incorporation-text">
-          Tools for Sovereignty becomes a company. The name is a riff on Tools for Humanity.
-        </p>
-        <div style="margin-top: 0.75rem;">
-          <Artifact
-            label="The name"
-            type="tweet"
-            href="https://x.com/arthaud_/status/1981768176049246422"
-          />
-        </div>
-      </div>
-    </div>
-
-    <!-- POST-INCORPORATION -->
-    <div style="margin-bottom: 4rem;">
-      <p class="maze-era">After incorporation</p>
-    </div>
-
-    <Chapter date="May - September 2025" title="Sovereign Memory" status="dead-end">
-      <p>
-        The insight from Worldcoin was clear: AI needs to know who you are.
-        So we built private user memory. RAG pipelines with client-side
-        embeddings. Trusted execution environments like Phala. Your data
-        stays with you, AI just reads it.
+        Problem: With our apps we realised early that memory was the moat for AI apps — users should control it and be able to share it across apps.
       </p>
       <p>
-        The tech was elegant. Personalization from the very first interaction,
-        without anyone ever seeing your data. We wrote a manifesto about why
-        this mattered: reclaiming the web, building the missing context layer
-        for AI, making portability the default.
+        Solution: SDK/API & MCP server for apps to personalise their LLM-based offerings, privacy guarantees via TEEs.
       </p>
-      <Lesson type="insight">
-        Privacy-preserving personalization was technically beautiful. Client-side
-        embeddings, TEEs, and user-controlled data felt like the right
-        architecture for a post-platform internet.
-      </Lesson>
       <Lesson type="pivot">
-        Apps don't care about privacy. We were solving a user problem that
-        buyers (the apps integrating us) didn't value. Pragmatism over ideology.
+        Apps didn't care about privacy.
       </Lesson>
-      <div style="margin-top: 1rem;">
-        <Artifact label="The Manifesto" type="link" href="/manifesto" />
-      </div>
+      <p>
+        We wrote a
+        <a class="inline-link" href="https://x.com/arthaud_/status/1945155464620048607" target="_blank" rel="noopener noreferrer">manifesto</a>
+        about why this mattered.
+      </p>
     </Chapter>
 
     <Chapter date="September - December 2025" title="The Identity Play" status="dead-end">
       <p>
-        If privacy wasn't the hook, maybe convenience was. We built an IAM
-        provider: log in once, connect your data once, and every app just
-        works. No re-sharing, no re-onboarding, no repeating yourself.
-        Portable identity for the AI era.
+        Product: IAM provider with context seeding.
       </p>
-      <Lesson type="insight">
-        The onboarding problem was real. Every new AI app asks you the same
-        questions, connects the same accounts, starts from zero. A shared
-        identity layer that carried context across apps was a clean abstraction.
-      </Lesson>
+      <p>
+        Problem: Users don't have to reintroduce themselves to every app.
+      </p>
+      <p>
+        Solution: Identity provider with context seeding — think Poke's onboarding as a service.
+      </p>
       <Lesson type="pivot">
-        Identity is a feature, not a product. Nobody wakes up wanting a
-        better login. They want better tools.
+        Apps caught up on the importance of context and wanted to control it.
       </Lesson>
     </Chapter>
 
-    <Chapter date="January - February 2026" title="Fast Iterations">
+    <Chapter date="January - March 2026" title="Fast Iterations" status="dead-end">
       <p>
-        Memory infrastructure was a bad market. Customers folded through.
-        We started moving fast, testing ideas in weeks instead of months.
-        Action produces information.
+        Products: MCP context aggregator, initially for individuals, then for companies.
       </p>
       <p>
-        Context seeding. MCP aggregator. Portable company context across LLMs.
-        Each iteration got closer to something real. Then we discovered
-        Open Claw and the world of self-hosted agents, and something clicked.
+        Problem: Your context is tied to an LLM provider, you should be able to port it.
       </p>
-      <Lesson type="insight">
-        Speed itself was the strategy. Each dead idea produced the information
-        we needed for the next one. Don't overthink. Ship, learn, kill, repeat.
+      <p>
+        Solution: An extension to your AI apps that syncs them to the relevant context.
+      </p>
+      <Lesson type="pivot">
+        Context reconciliation is difficult and if we do context management, we should sell the outcome.
       </Lesson>
     </Chapter>
 
-    <Chapter date="March - April 2026" title="Context Drift" status="active-path">
+    <Chapter date="April 2026" title="Coworker in Slack" status="active-path">
       <p>
-        We started asking a different question: what actually breaks when you
-        adopt agentic engineering? The answer is context. Agents drift.
-        Knowledge fragments. Teams lose coherence.
+        Product: Agent that lives in Slack and gets work done for you.
       </p>
       <p>
-        We built a reconciliation tool. Then we realized reconciliation is
-        just the beginning. The real opportunity is automating work itself.
-        That's where we are today. An agent that lives in Slack, automating
-        the work that knowledge workers do every day.
+        Problem: Most agents today are single player, require technical knowledge to adopt and aren't proactive.
       </p>
-      <Lesson type="insight">
-        The idea maze doesn't end. You just get better at reading the walls.
-      </Lesson>
+      <p>
+        Solution: A digital coworker that knows your company, adapts to how you work and is accessible directly in your team communication tool.
+      </p>
+      <p>
+        We're a small team of founders obsessed with product and sweating the details.
+      </p>
+      <div style="margin-top: 1rem;">
+        <Artifact label="Try it here" type="demo" href="https://mio.xyz" />
+      </div>
     </Chapter>
 
   </div>

@@ -25,11 +25,14 @@ const { title, description = "The first year of Tools for Sovereignty. Navigatin
 
     <nav class="nav">
       <div class="nav-inner">
-        <a href="/" class="nav-logo">Tools for Sovereignty</a>
-        <div class="nav-links">
-          <a href="/">The Maze</a>
-          <a href="/manifesto">Manifesto</a>
-        </div>
+        <a href="/" class="nav-logo">
+          <span>Tools for Sovereignty</span>
+          <div class="nav-logo-row">
+            <img src="/logo.png" alt="" class="nav-logo-img hero-logo" />
+            <img src="/logo.png" alt="" class="nav-logo-img hero-logo" />
+            <img src="/logo.png" alt="" class="nav-logo-img hero-logo" />
+          </div>
+        </a>
       </div>
     </nav>
 
@@ -37,13 +40,24 @@ const { title, description = "The first year of Tools for Sovereignty. Navigatin
       <slot />
     </main>
 
-    <footer class="footer">
-      <div class="footer-inner">
-        <p>Tools for Sovereignty, 2025–2026</p>
-      </div>
-    </footer>
 
     <script>
+      // --- Nav logo scroll rotation ---
+      const heroLogos = document.querySelectorAll<HTMLImageElement>(".hero-logo");
+      if (heroLogos.length) {
+        let logoRotation = 0;
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener("scroll", () => {
+          const delta = window.scrollY - lastScrollY;
+          logoRotation += delta * 0.5;
+          heroLogos.forEach((logo) => {
+            logo.style.transform = `rotate(${logoRotation}deg)`;
+          });
+          lastScrollY = window.scrollY;
+        }, { passive: true });
+      }
+
       // --- Chapter fade-in observer ---
       const chapterObserver = new IntersectionObserver(
         (entries) => {
