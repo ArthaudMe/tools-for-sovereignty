@@ -365,6 +365,20 @@ ul {
   font-style: italic;
 }
 
+/* --- Bottom logos --- */
+
+.bottom-logos {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 4rem 0 5rem;
+}
+
+.bottom-logo-img {
+  width: 54px;
+  height: 54px;
+}
+
 /* --- Artifact --- */
 
 .artifact {
