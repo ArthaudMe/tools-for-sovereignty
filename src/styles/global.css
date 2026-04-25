@@ -354,7 +354,7 @@ ul {
 }
 
 .chapter-image {
-  max-width: 200px;
+  max-width: 280px;
   border-radius: 6px;
   border: 1px solid var(--color-border);
 }
