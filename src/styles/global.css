@@ -5,8 +5,8 @@
 
 :root {
   /* Match the envelope/letter paper color */
-  --color-paper: #e9e7e3;
-  --color-bg: #e9e7e3;
+  --color-paper: #ece9e4;
+  --color-bg: #ece9e4;
   --color-border: #d0cac0;
   --color-muted: #8a8378;
   --color-text: #3d3832;
@@ -321,6 +321,17 @@ ul { list-style: disc; padding-left: 1.5rem; }
 
 .bottom-logo-img { width: 48px; height: 48px; }
 
+/* ========== EMBOSSED LOGO (on letter paper) ========== */
+
+.letter-emboss {
+  width: 32px;
+  height: 32px;
+  display: block;
+  margin: 20px auto 0;
+  opacity: 0.08;
+  filter: grayscale(1);
+}
+
 /* ========== RESPONSIVE ========== */
 
 @media (max-width: 767px) {
@@ -334,4 +345,5 @@ ul { list-style: disc; padding-left: 1.5rem; }
   .chapter-node::before { display: none; }
   .chapter-title { font-size: 1.125rem; }
   .maze-era { padding-left: 0; }
+  .letter-emboss { margin-top: 10px; width: 24px; height: 24px; }
 }

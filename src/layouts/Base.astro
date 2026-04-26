@@ -30,12 +30,16 @@ const { title, description = "The first year of Tools for Sovereignty. Navigatin
 
       <div class="letter" id="letter">
         <div class="letter-content" id="letter-content">
-          <div class="letter-logo-spacer"></div>
-          <slot />
-          <div class="bottom-logos">
-            <img src="/logo.png" alt="" class="bottom-logo-img" />
-            <img src="/logo.png" alt="" class="bottom-logo-img" />
-            <img src="/logo.png" alt="" class="bottom-logo-img" />
+          <div class="letter-logo-spacer">
+            <img src="/logo.png" alt="" class="letter-emboss" />
+          </div>
+          <div id="letter-text">
+            <slot />
+            <div class="bottom-logos">
+              <img src="/logo.png" alt="" class="bottom-logo-img" />
+              <img src="/logo.png" alt="" class="bottom-logo-img" />
+              <img src="/logo.png" alt="" class="bottom-logo-img" />
+            </div>
           </div>
         </div>
       </div>
@@ -49,6 +53,7 @@ const { title, description = "The first year of Tools for Sovereignty. Navigatin
       const scrollSpacer = document.getElementById("scroll-spacer")!;
       const letter = document.getElementById("letter")!;
       const letterContent = document.getElementById("letter-content")!;
+      const letterText = document.getElementById("letter-text")!;
       const envBack = document.getElementById("env-back")!;
       const envFront = document.getElementById("env-front")!;
 
@@ -57,9 +62,17 @@ const { title, description = "The first year of Tools for Sovereignty. Navigatin
       let travelPx = 0;
 
       function measure() {
-        const img = envBack.querySelector("img")!;
+        const img = envBack.querySelector("img") as HTMLImageElement;
         envHeight = img.offsetHeight;
-        travelPx = envHeight * 0.9;
+
+        // Letter needs to travel up so the logo goes off screen
+        // and the text area starts near the top of the viewport.
+        const computedTop = parseFloat(getComputedStyle(letter).top);
+        const computedMargin = parseFloat(getComputedStyle(letter).marginTop);
+        const letterTop = computedTop + computedMargin;
+        const spacer = document.querySelector(".letter-logo-spacer") as HTMLElement;
+        travelPx = letterTop + spacer.offsetHeight;
+
         const contentH = letterContent.scrollHeight;
         scrollSpacer.style.height = `${PULL_PX + contentH}px`;
       }
@@ -69,25 +82,32 @@ const { title, description = "The first year of Tools for Sovereignty. Navigatin
         const pull = Math.min(scrollY / PULL_PX, 1);
 
         if (pull < 1) {
-          // Phase 1: letter slides UP, envelope slides DOWN
+          /* ── Phase 1: Letter slides UP, envelope slides DOWN ── */
           const eased = 1 - Math.pow(1 - pull, 3);
           letter.style.transform = `translateY(${-eased * travelPx}px)`;
 
-          // Envelope slides down progressively once text starts showing (~30%)
+          // Envelope slides down after the letter clears (~30 %)
           const envSlide = pull > 0.3
             ? ((pull - 0.3) / 0.7) * envHeight * 1.2
             : 0;
           envBack.style.transform = `translate(-50%, calc(-45% + ${envSlide}px))`;
           envFront.style.transform = `translate(-50%, calc(-45% + ${envSlide}px))`;
 
+          // Text stays hidden while the envelope is still visible
+          letterText.style.opacity = "0";
           letterContent.style.transform = "translateY(0)";
         } else {
-          // Phase 2: envelope gone, scroll content
+          /* ── Phase 2: Envelope gone — text fades in, content scrolls ── */
           letter.style.transform = `translateY(${-travelPx}px)`;
-          envBack.style.transform = `translate(-50%, 100%)`;
-          envFront.style.transform = `translate(-50%, 100%)`;
+          envBack.style.transform = "translate(-50%, 100%)";
+          envFront.style.transform = "translate(-50%, 100%)";
 
           const contentScroll = scrollY - PULL_PX;
+
+          // Text fades in over the first 100 px of content scroll
+          const textOpacity = Math.min(1, contentScroll / 100);
+          letterText.style.opacity = `${textOpacity}`;
+
           letterContent.style.transform = `translateY(${-contentScroll}px)`;
         }
       }
