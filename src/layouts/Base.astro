@@ -20,131 +20,217 @@ const { title, description = "The first year of Tools for Sovereignty. Navigatin
     <meta property="og:description" content={description} />
     <title>{title}</title>
   </head>
-  <body>
-    <div class="scroll-spacer" id="scroll-spacer"></div>
+  <body class="grain">
+    <canvas class="stipple-canvas" id="stipple"></canvas>
 
-    <div class="envelope-scene" id="scene">
-      <div class="envelope-layer envelope-back" id="env-back">
-        <img src="/envelope.png" alt="" />
-      </div>
-
-      <div class="letter" id="letter">
-        <div class="letter-content" id="letter-content">
-          <div class="letter-logo-spacer">
-            <img src="/logo.png" alt="" class="letter-emboss" />
+    <nav class="nav">
+      <div class="nav-inner">
+        <a href="/" class="nav-logo">
+          <span>Tools for Sovereignty</span>
+          <div class="nav-logo-row">
+            <img src="/logo.png" alt="" class="nav-logo-img hero-logo" />
+            <img src="/logo.png" alt="" class="nav-logo-img hero-logo" />
+            <img src="/logo.png" alt="" class="nav-logo-img hero-logo" />
           </div>
-          <div id="letter-text">
-            <slot />
-            <div class="bottom-logos">
-              <img src="/logo.png" alt="" class="bottom-logo-img" />
-              <img src="/logo.png" alt="" class="bottom-logo-img" />
-              <img src="/logo.png" alt="" class="bottom-logo-img" />
-            </div>
-          </div>
-        </div>
+        </a>
       </div>
+    </nav>
 
-      <div class="envelope-layer envelope-front" id="env-front">
-        <img src="/envelope.png" alt="" />
-      </div>
-    </div>
+    <main style="padding-top: 5rem;">
+      <slot />
+    </main>
+
 
     <script>
-      const scrollSpacer = document.getElementById("scroll-spacer")!;
-      const letter = document.getElementById("letter")!;
-      const letterContent = document.getElementById("letter-content")!;
-      const letterText = document.getElementById("letter-text")!;
-      const envBack = document.getElementById("env-back")!;
-      const envFront = document.getElementById("env-front")!;
+      // --- Nav logo scroll rotation ---
+      const heroLogos = document.querySelectorAll<HTMLImageElement>(".hero-logo");
+      if (heroLogos.length) {
+        let logoRotation = 0;
+        let lastScrollY = window.scrollY;
 
-      const PULL_PX = 700;
-      let envHeight = 0;
-      let travelPx = 0;
-
-      function measure() {
-        const img = envBack.querySelector("img") as HTMLImageElement;
-        envHeight = img.offsetHeight;
-
-        // Letter needs to travel up so the logo goes off screen
-        // and the text area starts near the top of the viewport.
-        const computedTop = parseFloat(getComputedStyle(letter).top);
-        const computedMargin = parseFloat(getComputedStyle(letter).marginTop);
-        const letterTop = computedTop + computedMargin;
-        const spacer = document.querySelector(".letter-logo-spacer") as HTMLElement;
-        travelPx = letterTop + spacer.offsetHeight;
-
-        const contentH = letterContent.scrollHeight;
-        scrollSpacer.style.height = `${PULL_PX + contentH}px`;
+        window.addEventListener("scroll", () => {
+          const delta = window.scrollY - lastScrollY;
+          logoRotation += delta * 0.5;
+          heroLogos.forEach((logo) => {
+            logo.style.transform = `rotate(${logoRotation}deg)`;
+          });
+          lastScrollY = window.scrollY;
+        }, { passive: true });
       }
 
-      function update() {
-        const scrollY = window.scrollY;
-        const pull = Math.min(scrollY / PULL_PX, 1);
+      // --- Chapter fade-in observer ---
+      const chapterObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+      );
+      document.querySelectorAll(".chapter").forEach((el) => chapterObserver.observe(el));
 
-        if (pull < 1) {
-          /* ── Phase 1: Letter slides UP, envelope slides DOWN ── */
-          const eased = 1 - Math.pow(1 - pull, 3);
-          letter.style.transform = `translateY(${-eased * travelPx}px)`;
+      // --- Stipple timeline: dots scatter → converge into the maze line as you scroll ---
+      const canvas = document.getElementById("stipple") as HTMLCanvasElement;
+      if (!canvas) throw new Error("No canvas");
+      const ctx = canvas.getContext("2d")!;
 
-          // Envelope slides down after the letter clears (~30 %)
-          const envSlide = pull > 0.3
-            ? ((pull - 0.3) / 0.7) * envHeight * 1.2
-            : 0;
-          envBack.style.transform = `translate(-50%, calc(-45% + ${envSlide}px))`;
-          envFront.style.transform = `translate(-50%, calc(-45% + ${envSlide}px))`;
+      let W = 0;
+      let H = 0;
+      let dpr = 1;
 
-          // Text stays hidden while the envelope is still visible
-          letterText.style.opacity = "0";
-          letterContent.style.transform = "translateY(0)";
-        } else {
-          /* ── Phase 2: Envelope gone — text fades in, content scrolls ── */
-          letter.style.transform = `translateY(${-travelPx}px)`;
-          envBack.style.transform = "translate(-50%, 100%)";
-          envFront.style.transform = "translate(-50%, 100%)";
+      interface Dot {
+        // Rest position on the line (page coords)
+        lineX: number;
+        lineY: number;
+        // Scatter offset from the line
+        offsetX: number;
+        offsetY: number;
+        size: number;
+        baseOpacity: number;
+      }
 
-          const contentScroll = scrollY - PULL_PX;
+      let dots: Dot[] = [];
+      let mazeTop = 0;
+      let mazeBottom = 0;
+      let mazeLineX = 0;
+      let isMobile = false;
 
-          // Text fades in over the first 100 px of content scroll
-          const textOpacity = Math.min(1, contentScroll / 100);
-          letterText.style.opacity = `${textOpacity}`;
+      const DOT_SPACING = 3;
+      const SCATTER_X = 180;
+      const SCATTER_Y = 40;
 
-          letterContent.style.transform = `translateY(${-contentScroll}px)`;
+      function resize() {
+        dpr = window.devicePixelRatio || 1;
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        canvas.style.width = W + "px";
+        canvas.style.height = H + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        isMobile = W < 768;
+      }
+
+      function seedDots() {
+        dots = [];
+        const maze = document.getElementById("maze");
+        if (!maze || isMobile) return;
+
+        const rect = maze.getBoundingClientRect();
+        mazeTop = rect.top + window.scrollY;
+        mazeBottom = rect.bottom + window.scrollY;
+
+        // The line X is at the left padding of .maze (container padding 2rem + maze-line at 1.25rem)
+        const containerLeft = rect.left;
+        mazeLineX = containerLeft + 20; // ~1.25rem
+
+        const totalHeight = mazeBottom - mazeTop;
+        const count = Math.floor(totalHeight / DOT_SPACING);
+
+        for (let i = 0; i < count; i++) {
+          const lineY = mazeTop + i * DOT_SPACING;
+
+          // Random scatter direction - mostly horizontal spread with some vertical jitter
+          const angle = Math.random() * Math.PI * 2;
+          const distX = (Math.random() * 0.7 + 0.3) * SCATTER_X * (Math.random() < 0.5 ? -1 : 1);
+          const distY = (Math.random() - 0.5) * SCATTER_Y * 2;
+
+          dots.push({
+            lineX: mazeLineX,
+            lineY,
+            offsetX: distX + Math.cos(angle) * 20,
+            offsetY: distY + Math.sin(angle) * 15,
+            size: Math.random() * 1.4 + 0.5,
+            baseOpacity: Math.random() * 0.25 + 0.15,
+          });
         }
       }
 
-      // Logo rotation
-      const logos = document.querySelectorAll<HTMLImageElement>(".hero-logo");
-      let rot = 0;
-      let lastY = window.scrollY;
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        if (isMobile || dots.length === 0) return;
 
-      // Chapter fade-in
-      const obs = new IntersectionObserver(
-        (entries) => entries.forEach((e) => {
-          if (e.isIntersecting) e.target.classList.add("visible");
-        }),
-        { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
-      );
+        const scrollTop = window.scrollY;
+        const viewTop = scrollTop - 100;
+        const viewBottom = scrollTop + H + 100;
 
+        // The "convergence front" is at the top third of the viewport
+        // Dots above this line are converged, dots below scatter
+        const convergeFront = scrollTop + H * 0.35;
+        // Transition zone: dots within this range are partially converged
+        const transitionRange = H * 0.6;
+
+        for (const dot of dots) {
+          // Skip dots far off screen
+          if (dot.lineY < viewTop - SCATTER_Y || dot.lineY > viewBottom + SCATTER_Y) continue;
+
+          // How far below the convergence front is this dot?
+          const distBelowFront = dot.lineY - convergeFront;
+
+          // progress: 1 = fully on the line, 0 = fully scattered
+          let progress: number;
+          if (distBelowFront <= 0) {
+            // Above the front: fully converged
+            progress = 1;
+          } else if (distBelowFront >= transitionRange) {
+            // Far below: fully scattered
+            progress = 0;
+          } else {
+            // In transition zone
+            const t = 1 - distBelowFront / transitionRange;
+            progress = t * t * t; // ease-in cubic for organic feel
+          }
+
+          // Position: interpolate between scattered and line
+          const x = dot.lineX + dot.offsetX * (1 - progress);
+          const y = dot.lineY + dot.offsetY * (1 - progress);
+
+          // Convert to screen coords
+          const screenY = y - scrollTop;
+
+          // Opacity: converged dots are more opaque and form a solid line
+          const opacity = dot.baseOpacity * (0.2 + progress * 0.8);
+
+          ctx.fillStyle = `rgba(58, 52, 46, ${opacity})`;
+          ctx.beginPath();
+          // Dots get slightly smaller as they converge (tighter line)
+          const size = dot.size * (1 - progress * 0.4);
+          ctx.arc(x, screenY, size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      let ticking = false;
       function onScroll() {
-        requestAnimationFrame(() => {
-          update();
-          const d = window.scrollY - lastY;
-          rot += d * 0.5;
-          logos.forEach((l) => { l.style.transform = `rotate(${rot}deg)`; });
-          lastY = window.scrollY;
-        });
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            draw();
+            ticking = false;
+          });
+          ticking = true;
+        }
       }
 
       function init() {
-        measure();
-        update();
-        document.querySelectorAll(".chapter").forEach((el) => obs.observe(el));
+        resize();
+        seedDots();
+        draw();
       }
 
+      window.addEventListener("resize", () => {
+        resize();
+        seedDots();
+        draw();
+      });
       window.addEventListener("scroll", onScroll, { passive: true });
-      window.addEventListener("resize", () => { measure(); update(); });
-      if (document.readyState === "complete") init();
-      else window.addEventListener("load", init);
+
+      if (document.readyState === "complete") {
+        init();
+      } else {
+        window.addEventListener("load", init);
+      }
     </script>
   </body>
 </html>
