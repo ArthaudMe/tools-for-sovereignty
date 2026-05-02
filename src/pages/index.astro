@@ -13,15 +13,9 @@ import Artifact from "../components/Artifact.astro";
     </h1>
     <div class="hero-intro">
       <p>
-        We spent the last year navigating the
+        Tools for Sovereignty turns 1 today. We spent the last year navigating the
         <a class="inline-link" href="https://cdixon.org/2013/08/04/the-idea-maze" target="_blank" rel="noopener noreferrer">idea maze</a>.
-        We've worked through eight different product iterations. Today marks the one-year anniversary of the incorporation of
-        Tools for Sovereignty. This is an account of what we worked on, what we
-        found interesting, and what we learned.
-        <a class="inline-link" href="https://posthog.com/founders/product-market-fit-game" target="_blank" rel="noopener noreferrer">PostHog</a> and
-        <a class="inline-link" href="https://www.lennysnewsletter.com/p/finding-product-market-fit" target="_blank" rel="noopener noreferrer">Lenny's newsletter</a>,
-        which also influenced our navigation of this phase, are valuable
-        resources for any early-stage founder pre-PMF.
+        We shipped 6 products all anchored around context: what makes AI truly useful to you. We started Tools for Sovereignty to give people control over their context.
       </p>
     </div>
   </header>
@@ -29,32 +23,12 @@ import Artifact from "../components/Artifact.astro";
   <!-- The Maze -->
   <div class="container maze" id="maze">
 
-    <Chapter date="October - December 2024" title="The Startup Company" status="dead-end">
-      <p>
-        Product: Incorporation + Neobank using ZKPs (Aztec) — think
-        <a class="inline-link" href="https://x.com/arthaud_/status/1900578061873041558" target="_blank" rel="noopener noreferrer">Stripe Atlas + Mercury</a>.
-      </p>
-      <p>
-        Problem: Admin is one of the blockers preventing entrepreneurship outside the US.
-      </p>
-      <p>
-        Solution: Simplest way to incorporate & run an
-        <a class="inline-link" href="https://paragraph.com/@internetnativecompany" target="_blank" rel="noopener noreferrer">internet native company</a>.
-      </p>
-      <p>
-        GTM: Partner with Sark, a UK crown dependency, to create a hub for internet founders.
-      </p>
-      <Lesson type="pivot">
-        Too slow + our PE partner in Sark didn't follow through.
-      </Lesson>
-    </Chapter>
-
-    <Chapter date="November 2024" title="What Did You Get Done Today?" status="dead-end">
+    <Chapter date="December 2024" title="What Did You Get Done Today?" status="dead-end">
       <p>
         Product: A Slack bot automating standup.
       </p>
       <p>
-        Problem: Companies waste a lot of time on coordination whilst all the work artifacts already exist.
+        Problem: Companies waste a lot of time on coordination whilst all the context already exists.
       </p>
       <p>
         Description: A Slack bot using LLMs to aggregate the work done across different tools.
@@ -63,26 +37,11 @@ import Artifact from "../components/Artifact.astro";
         GTM: Founder sales.
       </p>
       <Lesson type="pivot">
-        Feature not a product: LLMs not powerful enough then and MCP extremely nascent.
+        First swing at sovereignty over work signal: extract context that already lives in your tools. LLMs and MCP weren't ready. Right intuition, eighteen months early.
       </Lesson>
       <figure class="chapter-figure">
         <img src="/slack-bot-screenshot.jpg" alt="Slack bot daily summary" class="chapter-image" />
       </figure>
-    </Chapter>
-
-    <Chapter date="December 2024" title="Personal Data Marketplace" status="dead-end">
-      <p>
-        Product: Marketplace for internet users to sell their data to train models.
-      </p>
-      <p>
-        Problem: Get model providers to pay internet users for their data & get people to care about data ownership.
-      </p>
-      <p>
-        GTM: Bootstrap demand with crypto economics.
-      </p>
-      <Lesson type="pivot">
-        Model providers don't need non-expert data.
-      </Lesson>
     </Chapter>
 
     <Chapter date="January - April 2025" title="The Worldcoin Bet" status="dead-end">
@@ -93,11 +52,11 @@ import Artifact from "../components/Artifact.astro";
         Opportunity: World App was emerging as a novel superapp.
       </p>
       <p>
-        GTM: Build the best AI apps on World using personalisation —
+        GTM: Build the best AI apps on World leveraging personal context —
         <a class="inline-link" href="https://x.com/arthaud_/status/1883950196159353191" target="_blank" rel="noopener noreferrer">got to 250k users</a> in the span of a few months.
       </p>
       <Lesson type="pivot">
-        World App users were speculators, not looking for utility-based products.
+        Built consumer AI apps. The 250k users came back for personalisation, which is just context applied at the user level. Wrong audience for a B2B sovereignty story, but this is where we learned context is the moat.
       </Lesson>
       <figure class="chapter-figure">
         <img src="/worldcoin-screenshot.jpg" alt="Sage — #1 AI app on World" class="chapter-image" />
@@ -115,12 +74,12 @@ import Artifact from "../components/Artifact.astro";
         Solution: SDK/API & MCP server for apps to personalise their LLM-based offerings, privacy guarantees via TEEs.
       </p>
       <Lesson type="pivot">
-        Apps didn't care about privacy.
+        Apps wanted the context, not the privacy story. Selling sovereignty as a feature instead of an outcome was the mistake.
       </Lesson>
       <p>
         We wrote a
         <a class="inline-link" href="https://x.com/arthaud_/status/1945155464620048607" target="_blank" rel="noopener noreferrer">manifesto</a>
-        about why this mattered.
+        about why the privacy frame mattered, then learned the buyer didn't care.
       </p>
     </Chapter>
 
@@ -135,11 +94,11 @@ import Artifact from "../components/Artifact.astro";
         Solution: <a class="inline-link" href="https://x.com/arthaud_/status/1981768176049246422" target="_blank" rel="noopener noreferrer">Identity provider</a> with context seeding — think Poke's onboarding as a service.
       </p>
       <Lesson type="pivot">
-        Context is too core to the app's experience, they want to control it.
+        Context isn't a layer underneath the app. It is the app. No founder wants to outsource the most valuable part of their product to an IAM provider, no matter how good the seeding is.
       </Lesson>
     </Chapter>
 
-    <Chapter date="January - March 2026" title="Fast Iterations" status="dead-end">
+    <Chapter date="January - March 2026" title="Context Aggregator" status="dead-end">
       <p>
         Products: MCP context aggregator, initially for individuals, then for companies.
       </p>
@@ -150,7 +109,7 @@ import Artifact from "../components/Artifact.astro";
         Solution: An extension to your AI apps that syncs them to the relevant context.
       </p>
       <Lesson type="pivot">
-        Context reconciliation is difficult and if we do context management, we should sell the outcome.
+        Context reconciliation is hard. The bigger lesson: context is plumbing, and plumbing isn't a product. Sell the outcome of sovereignty (your work gets done with your data) not the pipe.
       </Lesson>
     </Chapter>
 
@@ -169,6 +128,9 @@ import Artifact from "../components/Artifact.astro";
       </div>
       <p>
         We're a small team of founders obsessed with product and sweating the details.
+      </p>
+      <p>
+        Your context, your team, your perimeter. Sovereignty as outcome, not as pitch.
       </p>
     </Chapter>
 
