@@ -142,11 +142,16 @@ const { title, description = "The first year of Tools for Sovereignty. Navigatin
         const viewTop = scrollTop - 100;
         const viewBottom = scrollTop + H + 100;
 
-        // The "convergence front" is at the top third of the viewport
-        // Dots above this line are converged, dots below scatter
-        const convergeFront = scrollTop + H * 0.35;
+        // Scroll progress: 0 at top, 1 at bottom of page
+        const maxScroll = document.documentElement.scrollHeight - H;
+        const scrollProgress = maxScroll > 0 ? scrollTop / maxScroll : 0;
+
+        // The convergence front sweeps from above the maze to below it
+        // At scrollProgress=0, front is above maze. At scrollProgress=1, front is well below maze bottom.
+        const mazeHeight = mazeBottom - mazeTop;
+        const convergeFront = mazeTop + (mazeHeight + H) * scrollProgress;
         // Transition zone: dots within this range are partially converged
-        const transitionRange = H * 0.6;
+        const transitionRange = H * 0.5;
 
         for (const dot of dots) {
           // Skip dots far off screen
