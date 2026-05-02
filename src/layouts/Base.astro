@@ -23,41 +23,12 @@ const { title, description = "The first year of Tools for Sovereignty. Navigatin
   <body>
     <canvas class="stipple-canvas" id="stipple"></canvas>
 
-    <nav class="nav">
-      <div class="nav-inner">
-        <a href="/" class="nav-logo">
-          <span>Tools for Sovereignty</span>
-          <div class="nav-logo-row">
-            <img src="/logo.png" alt="" class="nav-logo-img hero-logo" />
-            <img src="/logo.png" alt="" class="nav-logo-img hero-logo" />
-            <img src="/logo.png" alt="" class="nav-logo-img hero-logo" />
-          </div>
-        </a>
-      </div>
-    </nav>
-
-    <main style="padding-top: 5rem;">
+    <main style="padding-top: 3rem;">
       <slot />
     </main>
 
 
     <script>
-      // --- Nav logo scroll rotation ---
-      const heroLogos = document.querySelectorAll<HTMLImageElement>(".hero-logo");
-      if (heroLogos.length) {
-        let logoRotation = 0;
-        let lastScrollY = window.scrollY;
-
-        window.addEventListener("scroll", () => {
-          const delta = window.scrollY - lastScrollY;
-          logoRotation += delta * 0.5;
-          heroLogos.forEach((logo) => {
-            logo.style.transform = `rotate(${logoRotation}deg)`;
-          });
-          lastScrollY = window.scrollY;
-        }, { passive: true });
-      }
-
       // --- Chapter fade-in observer ---
       const chapterObserver = new IntersectionObserver(
         (entries) => {
@@ -70,6 +41,21 @@ const { title, description = "The first year of Tools for Sovereignty. Navigatin
         { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
       );
       document.querySelectorAll(".chapter").forEach((el) => chapterObserver.observe(el));
+
+      // --- Chapter logo scroll rotation ---
+      const chapterLogos = document.querySelectorAll<HTMLImageElement>(".chapter-logo");
+      if (chapterLogos.length) {
+        let logoRotation = 0;
+        let lastScrollY = window.scrollY;
+        window.addEventListener("scroll", () => {
+          const delta = window.scrollY - lastScrollY;
+          logoRotation += delta * 0.5;
+          chapterLogos.forEach((logo) => {
+            logo.style.transform = `rotate(${logoRotation}deg)`;
+          });
+          lastScrollY = window.scrollY;
+        }, { passive: true });
+      }
 
       // --- Stipple timeline: dots scatter → converge into the maze line as you scroll ---
       const canvas = document.getElementById("stipple") as HTMLCanvasElement;

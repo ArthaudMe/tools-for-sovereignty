@@ -290,32 +290,13 @@ ul {
   z-index: 10;
 }
 
-.chapter-node::before {
-  content: "";
+.chapter-logo {
   position: absolute;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--color-muted);
-  left: -1.6rem;
-  top: 0.45rem;
-  transition: all 0.3s ease;
-}
-
-.chapter-node:hover::before {
-  background: var(--color-text);
-}
-
-.chapter-node.dead-end::before {
-  background: var(--color-dead);
-}
-
-.chapter-node.dead-end:hover::before {
-  background: var(--color-dead);
-}
-
-.chapter-node.active-path::before {
-  background: var(--color-alive);
+  width: 18px;
+  height: 18px;
+  left: -1.85rem;
+  top: 0.15rem;
+  transition: transform 0.1s linear;
 }
 
 .chapter-date {
@@ -581,7 +562,7 @@ main { position: relative; z-index: 1; }
     margin-bottom: 3.5rem;
   }
 
-  .chapter-node::before {
+  .chapter-logo {
     display: none;
   }
 
